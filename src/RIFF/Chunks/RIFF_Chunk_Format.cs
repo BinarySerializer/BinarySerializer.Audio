@@ -1,22 +1,20 @@
-﻿
-namespace BinarySerializer.Audio
+﻿using System.Collections.Generic;
+using System.Text;
+
+namespace BinarySerializer.Audio.RIFF
 {
-    public class WAVFormatChunk : WAVChunk
+    public class RIFF_Chunk_Format : RIFF_ChunkData
     {
+		public override string ChunkIdentifier => "fmt ";
+
         public ushort FormatType { get; set; }
-
         public ushort ChannelCount { get; set; }
-
         public uint SampleRate { get; set; }
-
         public uint ByteRate { get; set; }
-
         public ushort BlockAlign { get; set; }
-
         public ushort BitsPerSample { get; set; }
 
-        protected override void SerializeChunk(SerializerObject s)
-        {
+        public override void SerializeImpl(SerializerObject s) {
             FormatType = s.Serialize<ushort>(FormatType, name: nameof(FormatType));
             ChannelCount = s.Serialize<ushort>(ChannelCount, name: nameof(ChannelCount));
             SampleRate = s.Serialize<uint>(SampleRate, name: nameof(SampleRate));

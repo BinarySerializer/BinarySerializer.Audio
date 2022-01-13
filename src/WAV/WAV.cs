@@ -1,20 +1,32 @@
-﻿using System.Collections.Generic;
-using System.Text;
+﻿using BinarySerializer.Audio.RIFF;
+using System.Linq;
 
 namespace BinarySerializer.Audio
 {
     /// <summary>
-    /// WAV audio file data
+    /// WAV audio file data, mainly to use as a shortcut to create RIFF files easier
     /// </summary>
     public class WAV : BinarySerializable
     {
-        public string Magic { get; set; }
+        private RIFF_Chunk RootChunk { get; set; }
 
-        public uint FileSize { get; set; }
-
-        public string FileTypeHeader { get; set; }
-
-        public WAVChunk[] Chunks { get; set; }
+        public RIFF_Chunk Root {
+            get {
+                if (RootChunk == null) {
+                    RootChunk = new RIFF_Chunk_RIFF() {
+                        Type = "WAVE",
+                        Chunks = new RIFF_Chunk[] {
+                            new RIFF_Chunk_Format().CreateChunk(),
+                            new RIFF_Chunk_Data().CreateChunk()
+                        },
+                    }.CreateChunk();
+                }
+                return RootChunk;
+            }
+        }
+        public RIFF_Chunk_RIFF Riff => (RIFF_Chunk_RIFF)(Root?.Data);
+        public RIFF_Chunk_Format Format => (RIFF_Chunk_Format)(Riff.Chunks.FirstOrDefault(c => c.Data.GetType() == typeof(RIFF_Chunk_Format)).Data);
+        public RIFF_Chunk_Data Data => (RIFF_Chunk_Data)(Riff.Chunks.FirstOrDefault(c => c.Data.GetType() == typeof(RIFF_Chunk_Data)).Data);
 
         /// <summary>
         /// Handles the data serialization
@@ -22,63 +34,7 @@ namespace BinarySerializer.Audio
         /// <param name="s">The serializer object</param>
         public override void SerializeImpl(SerializerObject s)
         {
-            // Serialize header
-            Magic = s.SerializeString(Magic, 4, Encoding.ASCII, name: nameof(Magic));
-            FileSize = s.Serialize<uint>(FileSize, name: nameof(FileSize));
-            FileTypeHeader = s.SerializeString(FileTypeHeader, 4, Encoding.ASCII, name: nameof(FileTypeHeader));
-
-            // Serialize chunks
-            if (Chunks == null)
-            {
-                var tempChunks = new List<WAVChunk>();
-                var index = 0;
-
-                while (FileSize - 8 > s.CurrentPointer.FileOffset)
-                {
-                    tempChunks.Add(s.SerializeObject<WAVChunk>(default, name: $"{nameof(Chunks)}[{index}]"));
-                    index++;
-                }
-
-                Chunks = tempChunks.ToArray();
-            }
-            else
-            {
-                s.SerializeObjectArray<WAVChunk>(Chunks, Chunks.Length, name: nameof(Chunks));
-
-                // Update file size
-                FileSize = (uint)(s.CurrentPointer.FileOffset - Offset.FileOffset - 8);
-                s.DoAt(Offset + 4, () => FileSize = s.Serialize<uint>(FileSize, name: nameof(FileSize)));
-            }
-        }
-    }
-
-    public class WAVListChunk : WAVChunk
-    {
-        public string ListHeader { get; set; }
-        public WAVChunk[] Chunks { get; set; }
-
-        protected override void SerializeChunk(SerializerObject s)
-        {
-            ListHeader = s.SerializeString(ListHeader, 4, Encoding.ASCII, name: nameof(ListHeader));
-
-            // Serialize chunks
-            if (Chunks == null)
-            {
-                var tempChunks = new List<WAVChunk>();
-                var index = 0;
-
-                while (ChunkSize - 8 > s.CurrentPointer.FileOffset)
-                {
-                    tempChunks.Add(s.SerializeObject<WAVChunk>(default, name: $"{nameof(Chunks)}[{index}]"));
-                    index++;
-                }
-
-                Chunks = tempChunks.ToArray();
-            }
-            else
-            {
-                s.SerializeObjectArray<WAVChunk>(Chunks, Chunks.Length, name: nameof(Chunks));
-            }
+			RootChunk = s.SerializeObject<RIFF_Chunk>(Root, name: nameof(RootChunk));
         }
     }
 }
