@@ -119,7 +119,7 @@ namespace BinarySerializer.Audio
                 Reserved = s.SerializeArray<byte>(Reserved, 2, name: nameof(Reserved));
             }
             if (s.CurrentAbsoluteOffset != Offset.AbsoluteOffset + InstrumentSize) {
-                s.LogWarning("XM: Incorrect Instrument Size");
+                s.SystemLog?.LogWarning("XM: Incorrect Instrument Size");
                 s.Goto(Offset + InstrumentSize);
             }
             Samples = s.SerializeObjectArray<XM_Sample>(Samples, NumSamples, name: nameof(Samples));

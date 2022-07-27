@@ -34,7 +34,7 @@ namespace BinarySerializer.Audio
                 PatternRows = s.SerializeObjectArray<XM_PatternRow>(PatternRows, PatternRows.Length, name: nameof(PatternRows));
             }
             if (s.CurrentAbsoluteOffset != Offset.AbsoluteOffset + PackedPatternDataSize + 4 + 1 + 2 + 2) {
-                s.LogWarning("XM: Incorrect Pattern Size");
+                s.SystemLog?.LogWarning("XM: Incorrect Pattern Size");
             }
         }
     }
