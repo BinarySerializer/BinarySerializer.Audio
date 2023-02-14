@@ -38,7 +38,7 @@ namespace BinarySerializer.Audio
         }
 
         public XM_PatternRow() {
-            Size = 1;
+            SerializedSize = 1;
         }
 
         public XM_PatternRow(
@@ -54,33 +54,33 @@ namespace BinarySerializer.Audio
                 VolumeColumnByte = volumeColumnByte.Value;
                 EffectType = effectType.Value;
                 EffectParameter = effectParameter.Value;
-                Size = 5;
+                SerializedSize = 5;
             } else {
-                Size = 1;
+                SerializedSize = 1;
                 if (note.HasValue) {
                     Flags = (byte)BitHelpers.SetBits(Flags, 1, 1, 0);
                     Note = note.Value;
-                    Size++;
+                    SerializedSize++;
                 }
                 if (instrument.HasValue) {
                     Flags = (byte)BitHelpers.SetBits(Flags, 1, 1, 1);
                     Instrument = instrument.Value;
-                    Size++;
+                    SerializedSize++;
                 }
                 if (volumeColumnByte.HasValue) {
                     Flags = (byte)BitHelpers.SetBits(Flags, 1, 1, 2);
                     VolumeColumnByte = volumeColumnByte.Value;
-                    Size++;
+                    SerializedSize++;
                 }
                 if (effectType.HasValue) {
                     Flags = (byte)BitHelpers.SetBits(Flags, 1, 1, 3);
                     EffectType = effectType.Value;
-                    Size++;
+                    SerializedSize++;
                 }
                 if (effectParameter.HasValue) {
                     Flags = (byte)BitHelpers.SetBits(Flags, 1, 1, 4);
                     EffectParameter = effectParameter.Value;
-                    Size++;
+                    SerializedSize++;
                 }
             }
         }
