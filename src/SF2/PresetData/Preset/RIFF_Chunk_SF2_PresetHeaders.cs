@@ -7,7 +7,7 @@ namespace BinarySerializer.Audio.SF2 {
 		public PresetHeader[] Headers { get; set; }
 
 		public override void SerializeImpl(SerializerObject s) {
-			Headers = s.SerializeObjectArray<PresetHeader>(Headers, ChunkSize / PresetHeader.StructSize, name: nameof(Headers));
+			Headers = s.SerializeObjectArray<PresetHeader>(Headers, Pre_ChunkSize / PresetHeader.StructSize, name: nameof(Headers));
 		}
 
 		public class PresetHeader : BinarySerializable {

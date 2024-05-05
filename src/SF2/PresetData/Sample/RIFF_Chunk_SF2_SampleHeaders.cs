@@ -7,7 +7,7 @@ namespace BinarySerializer.Audio.SF2 {
 		public SampleHeader[] Headers { get; set; }
 
 		public override void SerializeImpl(SerializerObject s) {
-			Headers = s.SerializeObjectArray<SampleHeader>(Headers, ChunkSize / SampleHeader.StructSize, name: nameof(Headers));
+			Headers = s.SerializeObjectArray<SampleHeader>(Headers, Pre_ChunkSize / SampleHeader.StructSize, name: nameof(Headers));
 		}
 
 		public class SampleHeader : BinarySerializable {

@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.Text;
 
 namespace BinarySerializer.Audio.RIFF
@@ -8,8 +8,9 @@ namespace BinarySerializer.Audio.RIFF
 		public override string ChunkIdentifier => "data";
         public byte[] Data { get; set; }
 
-		public override void SerializeImpl(SerializerObject s) {
-            Data = s.SerializeArray<byte>(Data, ChunkSize, name: nameof(Data));
+		public override void SerializeImpl(SerializerObject s) 
+        {
+            Data = s.SerializeArray<byte>(Data, Pre_ChunkSize, name: nameof(Data));
         }
     }
 }

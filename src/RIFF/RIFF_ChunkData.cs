@@ -8,7 +8,7 @@ namespace BinarySerializer.Audio.RIFF {
     public abstract class RIFF_ChunkData : BinarySerializable
     {
         public abstract string ChunkIdentifier { get; }
-        public uint ChunkSize { get; set; }
+        public long Pre_ChunkSize { get; set; }
 
         public RIFF_Chunk CreateChunk() => new RIFF_Chunk() {
             Identifier = ChunkIdentifier,

@@ -8,7 +8,7 @@ namespace BinarySerializer.Audio.SF2 {
         public short[] SampleData { get; set; }
 
 		public override void SerializeImpl(SerializerObject s) {
-			SampleData = s.SerializeArray<short>(SampleData, ChunkSize / 2, name: nameof(SampleData));
+			SampleData = s.SerializeArray<short>(SampleData, Pre_ChunkSize / 2, name: nameof(SampleData));
 		}
 
 		public uint AddSample(short[] sample) {

@@ -6,7 +6,7 @@ namespace BinarySerializer.Audio.SF2 {
 		public SF2_GeneratorEntry[] Generators { get; set; }
 
 		public override void SerializeImpl(SerializerObject s) {
-			Generators = s.SerializeObjectArray<SF2_GeneratorEntry>(Generators, ChunkSize / SF2_GeneratorEntry.StructSize, name: nameof(Generators));
+			Generators = s.SerializeObjectArray<SF2_GeneratorEntry>(Generators, Pre_ChunkSize / SF2_GeneratorEntry.StructSize, name: nameof(Generators));
 		}
 	}
 }

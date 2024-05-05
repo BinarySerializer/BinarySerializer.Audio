@@ -6,7 +6,7 @@ namespace BinarySerializer.Audio.SF2 {
 		public SF2_BagEntry[] Entries { get; set; }
 
 		public override void SerializeImpl(SerializerObject s) {
-			Entries = s.SerializeObjectArray<SF2_BagEntry>(Entries, ChunkSize / SF2_BagEntry.StructSize, name: nameof(Entries));
+			Entries = s.SerializeObjectArray<SF2_BagEntry>(Entries, Pre_ChunkSize / SF2_BagEntry.StructSize, name: nameof(Entries));
 		}
 	}
 }
