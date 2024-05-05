@@ -1,5 +1,7 @@
-﻿namespace BinarySerializer.Audio.SF2 {
-    public enum SF2_Generator : ushort {
+﻿namespace BinarySerializer.Audio.SF2
+{
+    public enum SF2_Generator : ushort
+    {
         StartAddrsOffset = 0,
         EndAddrsOffset = 1,
         StartloopAddrsOffset = 2,

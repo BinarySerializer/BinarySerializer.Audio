@@ -8,7 +8,7 @@
 
         public byte[] Data { get; set; }
 
-        public override void SerializeImpl(SerializerObject s) 
+        public override void SerializeImpl(SerializerObject s)
         {
             Data = s.SerializeArray<byte>(Data, Pre_ChunkSize, name: nameof(Data));
         }

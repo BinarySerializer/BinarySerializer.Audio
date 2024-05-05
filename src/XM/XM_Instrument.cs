@@ -1,12 +1,12 @@
-﻿using System.Collections.Generic;
-using System.Text;
+﻿using System.Text;
 
 namespace BinarySerializer.Audio
 {
     /// <summary>
     /// XM audio file data
     /// </summary>
-    public class XM_Instrument : BinarySerializable {
+    public class XM_Instrument : BinarySerializable
+    {
         public uint InstrumentSize { get; set; } = 243; // This is for instrument with sample. 29 without
         public string InstrumentName { get; set; }
         public byte InstrumentType { get; set; } = 0;
@@ -85,17 +85,14 @@ namespace BinarySerializer.Audio
 
         public XM_Sample[] Samples { get; set; }
 
-        /// <summary>
-        /// Handles the data serialization
-        /// </summary>
-        /// <param name="s">The serializer object</param>
         public override void SerializeImpl(SerializerObject s)
         {
             InstrumentSize = s.Serialize<uint>(InstrumentSize, name: nameof(InstrumentSize));
             InstrumentName = s.SerializeString(InstrumentName, 22, Encoding.ASCII, name: nameof(InstrumentName));
             InstrumentType = s.Serialize<byte>(InstrumentType, name: nameof(InstrumentType));
             NumSamples = s.Serialize<ushort>(NumSamples, name: nameof(NumSamples));
-            if (NumSamples > 0) {
+            if (NumSamples > 0)
+            {
                 SampleHeaderSize = s.Serialize<uint>(SampleHeaderSize, name: nameof(SampleHeaderSize));
                 SampleKeymapAssignments = s.SerializeArray<byte>(SampleKeymapAssignments, 96, name: nameof(SampleKeymapAssignments));
                 PointsForVolumeEnvelope = s.SerializeArray<ushort>(PointsForVolumeEnvelope, 24, name: nameof(PointsForVolumeEnvelope));
@@ -118,12 +115,14 @@ namespace BinarySerializer.Audio
                 VolumeFadeout = s.Serialize<ushort>(VolumeFadeout, name: nameof(VolumeFadeout));
                 Reserved = s.SerializeArray<byte>(Reserved, 2, name: nameof(Reserved));
             }
-            if (s.CurrentAbsoluteOffset != Offset.AbsoluteOffset + InstrumentSize) {
+            if (s.CurrentAbsoluteOffset != Offset.AbsoluteOffset + InstrumentSize)
+            {
                 s.SystemLogger?.LogWarning("XM: Incorrect Instrument Size");
                 s.Goto(Offset + InstrumentSize);
             }
             Samples = s.SerializeObjectArray<XM_Sample>(Samples, NumSamples, name: nameof(Samples));
-            foreach (var sam in Samples) {
+            foreach (var sam in Samples)
+            {
                 sam.SerializeData(s);
             }
         }

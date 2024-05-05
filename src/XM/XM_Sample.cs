@@ -1,13 +1,12 @@
-﻿using System.Collections.Generic;
-using System.Diagnostics;
-using System.Text;
+﻿using System.Text;
 
 namespace BinarySerializer.Audio
 {
     /// <summary>
     /// XM audio file data
     /// </summary>
-    public class XM_Sample : BinarySerializable {
+    public class XM_Sample : BinarySerializable
+    {
         public uint SampleLength { get; set; }
         public uint SampleLoopStart { get; set; }
         public uint SampleLoopLength { get; set; }
@@ -23,11 +22,6 @@ namespace BinarySerializer.Audio
         public sbyte[] SampleData8 { get; set; } // Signed!
         public short[] SampleData16 { get; set; }
 
-
-        /// <summary>
-        /// Handles the data serialization
-        /// </summary>
-        /// <param name="s">The serializer object</param>
         public override void SerializeImpl(SerializerObject s)
         {
             SampleLength = s.Serialize<uint>(SampleLength, name: nameof(SampleLength));
@@ -42,10 +36,14 @@ namespace BinarySerializer.Audio
             SampleName = s.SerializeString(SampleName, 22, Encoding.ASCII, name: nameof(SampleName));
         }
 
-        public void SerializeData(SerializerObject s) {
-            if (BitHelpers.ExtractBits(Type, 1, 4) == 1) {
+        public void SerializeData(SerializerObject s)
+        {
+            if (BitHelpers.ExtractBits(Type, 1, 4) == 1)
+            {
                 SampleData16 = s.SerializeArray<short>(SampleData16, SampleLength / 2, name: nameof(SampleData16));
-            } else {
+            }
+            else
+            {
                 SampleData8 = s.SerializeArray<sbyte>(SampleData8, SampleLength, name: nameof(SampleData8));
             }
         }

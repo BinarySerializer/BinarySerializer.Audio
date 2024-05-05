@@ -1,14 +1,16 @@
-﻿using BinarySerializer.Audio.RIFF;
-using System.Text;
+﻿using System.Text;
+using BinarySerializer.Audio.RIFF;
 
-namespace BinarySerializer.Audio.SF2 {
-	public class RIFF_Chunk_SF2_Info_SoundEngine : RIFF_ChunkData
+namespace BinarySerializer.Audio.SF2
+{
+    public class RIFF_Chunk_SF2_Info_SoundEngine : RIFF_ChunkData
     {
-		public override string ChunkIdentifier => "isng";
+        public override string ChunkIdentifier => "isng";
         public string SoundEngineName { get; set; }
 
-		public override void SerializeImpl(SerializerObject s) {
-			SoundEngineName = s.SerializeString(SoundEngineName, encoding: Encoding.ASCII, name: nameof(SoundEngineName));
-		}
+        public override void SerializeImpl(SerializerObject s)
+        {
+            SoundEngineName = s.SerializeString(SoundEngineName, encoding: Encoding.ASCII, name: nameof(SoundEngineName));
+        }
     }
 }

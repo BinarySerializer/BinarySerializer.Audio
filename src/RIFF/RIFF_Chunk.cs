@@ -1,9 +1,8 @@
-﻿using BinarySerializer.Audio.SF2;
-using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System.Text;
+using BinarySerializer.Audio.SF2;
 
-namespace BinarySerializer.Audio.RIFF {
+namespace BinarySerializer.Audio.RIFF
+{
     /// <summary>
     /// RIFF (Resource Interchange File Format) file data
     /// </summary>
