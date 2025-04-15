@@ -30,7 +30,7 @@ namespace BinarySerializer.Audio.RIFF
             Type = s.SerializeString(Type, length: 4, encoding: Encoding.ASCII, name: nameof(Type));
             Chunks = s.SerializeObjectArrayUntil<RIFF_Chunk>(
                 Chunks,
-                _ => (s.CurrentFileOffset - Offset.FileOffset) >= Pre_ChunkSize,
+                _ => (s.CurrentFileOffset - Offset.FileOffset) >= Pre_ChunkSize || s.CurrentFileOffset >= s.CurrentLength,
                 name: nameof(Chunks));
         }
     }
