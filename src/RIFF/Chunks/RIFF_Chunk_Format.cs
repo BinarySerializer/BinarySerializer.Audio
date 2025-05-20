@@ -20,7 +20,11 @@
             ByteRate = s.Serialize<uint>(ByteRate, name: nameof(ByteRate));
             BlockAlign = s.Serialize<ushort>(BlockAlign, name: nameof(BlockAlign));
             BitsPerSample = s.Serialize<ushort>(BitsPerSample, name: nameof(BitsPerSample));
-            AdditionalData = s.SerializeArray<byte>(AdditionalData, Pre_ChunkSize - 16, name: nameof(AdditionalData));
+
+            long additionalDataLength = Pre_ChunkSize - 16;
+            if (additionalDataLength < 0)
+                additionalDataLength = 0;
+            AdditionalData = s.SerializeArray<byte>(AdditionalData, additionalDataLength, name: nameof(AdditionalData));
         }
     }
 }
