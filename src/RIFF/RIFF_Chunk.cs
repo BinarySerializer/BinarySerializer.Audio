@@ -21,6 +21,7 @@ namespace BinarySerializer.Audio.RIFF
 
                 // WAV
                 "fmt " => serializeData<RIFF_Chunk_Format>(),
+                "cue " => serializeData<RIFF_Chunk_Cue>(),
 
                 // Pro Tools
                 "bext" => serializeData<RIFF_Chunk_BEXT>(),
