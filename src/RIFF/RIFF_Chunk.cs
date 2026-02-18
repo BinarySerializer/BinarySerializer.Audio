@@ -1,5 +1,4 @@
 ﻿using System.Text;
-using BinarySerializer.Audio.SF2;
 
 namespace BinarySerializer.Audio.RIFF
 {
@@ -13,46 +12,21 @@ namespace BinarySerializer.Audio.RIFF
 
         private void SerializeChunk(SerializerObject s, long chunkSize)
         {
-            Data = Identifier switch
+            RIFFSettings settings = s.GetRequiredSettings<RIFFSettings>();
+            RIFFSettings.ChunkResolver resolver = settings.GetChunkResolver(Identifier);
+
+            if (resolver == null)
             {
-                "RIFF" => serializeData<RIFF_Chunk_RIFF>(),
-                "data" => serializeData<RIFF_Chunk_Data>(),
-                "LIST" => serializeData<RIFF_Chunk_List>(),
-
-                // WAV
-                "fmt " => serializeData<RIFF_Chunk_Format>(),
-                "cue " => serializeData<RIFF_Chunk_Cue>(),
-
-                // Pro Tools
-                "bext" => serializeData<RIFF_Chunk_BEXT>(),
-
-                // SF2
-                "ifil" => serializeData<RIFF_Chunk_SF2_Info_VersionTag>(),
-                "isng" => serializeData<RIFF_Chunk_SF2_Info_SoundEngine>(),
-                "INAM" => serializeData<RIFF_Chunk_SF2_Info_BankName>(),
-                "ICMT" => serializeData<RIFF_Chunk_SF2_Info_Comment>(),
-                "smpl" => serializeData<RIFF_Chunk_SF2_SampleData>(),
-                "phdr" => serializeData<RIFF_Chunk_SF2_PresetHeaders>(),
-                "pbag" => serializeData<RIFF_Chunk_SF2_PresetBag>(),
-                "pmod" => serializeData<RIFF_Chunk_SF2_PresetModulatorList>(),
-                "pgen" => serializeData<RIFF_Chunk_SF2_PresetGeneratorList>(),
-                "inst" => serializeData<RIFF_Chunk_SF2_InstrumentHeaders>(),
-                "ibag" => serializeData<RIFF_Chunk_SF2_InstrumentBag>(),
-                "imod" => serializeData<RIFF_Chunk_SF2_InstrumentModulatorList>(),
-                "igen" => serializeData<RIFF_Chunk_SF2_InstrumentGeneratorList>(),
-                "shdr" => serializeData<RIFF_Chunk_SF2_SampleHeaders>(),
-
-                // Unknown
-                _ => s.SerializeObject<RIFF_Chunk_Unknown>((RIFF_Chunk_Unknown)Data, onPreSerialize: x =>
+                Data = s.SerializeObject<RIFF_Chunk_Unknown>((RIFF_Chunk_Unknown)Data, onPreSerialize: x =>
                 {
                     x.Pre_ChunkSize = chunkSize;
                     x.Pre_Identifier = Identifier;
-                }, name: nameof(Data)),
-            };
-
-            RIFF_ChunkData serializeData<T>()
-                where T : RIFF_ChunkData, new() =>
-                s.SerializeObject<T>((T)Data, onPreSerialize: d => d.Pre_ChunkSize = chunkSize, name: nameof(Data));
+                }, name: nameof(Data));
+            }
+            else
+            {
+                Data = resolver(s, Data, chunkSize, nameof(Data));
+            }
         }
 
         public override void SerializeImpl(SerializerObject s)
