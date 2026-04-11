@@ -32,12 +32,17 @@ namespace BinarySerializer.Audio.RIFF
         public override void SerializeImpl(SerializerObject s)
         {
             Identifier = s.SerializeString(Identifier, 4, Encoding.ASCII, name: nameof(Identifier));
-            s.DoProcessed(new DataLengthProcessor(), p =>
+            DataLengthProcessor p = new DataLengthProcessor();
+            p.Serialize<uint>(s, name: "Size");
+            s.DoProcessed(p, _ =>
             {
-                p.Serialize<uint>(s, name: "Size");
                 SerializeChunk(s, p.SerializedValue);
             });
-            s.Align(2, baseOffset: Offset);
+
+            // Align to 2
+            long align = (s.CurrentFileOffset - Offset.FileOffset) % 2;
+            if (align != 0)
+                s.SerializePadding(2 - align, logIfNotNull: true);
         }
     }
 }
