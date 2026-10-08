@@ -39,10 +39,13 @@ namespace BinarySerializer.Audio.RIFF
                 SerializeChunk(s, p.SerializedValue);
             });
 
-            // Align to 2
-            long align = (s.CurrentFileOffset - Offset.FileOffset) % 2;
-            if (align != 0)
-                s.SerializePadding(2 - align, logIfNotNull: true);
+            RIFFSettings settings = s.GetRequiredSettings<RIFFSettings>();
+            if (settings.AlignChunks) {
+                // Align to 2
+                long align = (s.CurrentFileOffset - Offset.FileOffset) % 2;
+                if (align != 0)
+                    s.SerializePadding(2 - align, logIfNotNull: true);
+            }
         }
     }
 }

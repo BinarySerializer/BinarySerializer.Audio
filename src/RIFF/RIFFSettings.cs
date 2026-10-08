@@ -15,6 +15,8 @@ namespace BinarySerializer.Audio.RIFF
                 s.SerializeObject<RIFF_Chunk_List>((RIFF_Chunk_List)data, x => x.Pre_ChunkSize = chunkSize, name: name));
         }
 
+        public bool AlignChunks { get; set; } = true;
+
         private Dictionary<string, ChunkResolver> ChunkResolvers { get; } = new Dictionary<string, ChunkResolver>();
 
         public delegate RIFF_ChunkData ChunkResolver(SerializerObject s, RIFF_ChunkData data, long chunkSize, string name);
