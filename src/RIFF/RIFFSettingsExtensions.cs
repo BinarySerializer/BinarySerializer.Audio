@@ -10,6 +10,10 @@ namespace BinarySerializer.Audio.RIFF
                 s.SerializeObject<RIFF_Chunk_Format>((RIFF_Chunk_Format)data, x => x.Pre_ChunkSize = chunkSize, name: name));
             settings.RegisterChunkResolver("cue ", (s, data, chunkSize, name) =>
                 s.SerializeObject<RIFF_Chunk_Cue>((RIFF_Chunk_Cue)data, x => x.Pre_ChunkSize = chunkSize, name: name));
+            settings.RegisterChunkResolver("ltxt", (s, data, chunkSize, name) =>
+                s.SerializeObject<RIFF_Chunk_LabeledText>((RIFF_Chunk_LabeledText)data, x => x.Pre_ChunkSize = chunkSize, name: name));
+            settings.RegisterChunkResolver("labl", (s, data, chunkSize, name) =>
+                s.SerializeObject<RIFF_Chunk_Label>((RIFF_Chunk_Label)data, x => x.Pre_ChunkSize = chunkSize, name: name));
         }
 
         public static void RegisterProTools(this RIFFSettings settings)
